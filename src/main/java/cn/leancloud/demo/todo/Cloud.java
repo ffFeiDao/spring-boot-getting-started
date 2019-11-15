@@ -42,25 +42,4 @@ public class Cloud {
     }
     return sum / reviews.size();
   }
-  
-  @EngineHook(className = "_User", type = EngineHookType.onLogin)
-  public static AVUser userOnLoginHook(AVUser user) throws Exception {
-    if ("noLogin".equals(user.getUsername())) {
-      throw new Exception("Forbidden");
-    } else {
-      return user;
-    }
-  }
-  
-  @IMHook(type = IMHookType.messageReceived)
-  public static Map<String, Object> onMessageReceived(Map<String, Object> params) {
-    System.out.println(params);
-    Map<String, Object> result = new HashMap<String, Object>();
-    String content = (String)params.get("content");
-    Map<String,Object> contentMap = (Map<String,Object>)JSON.parse(content);
-    String text = (String)(contentMap.get("_lctext").toString());
-    String processedContent = text.replace("中介", "**");
-    result.put("content", processedContent);
-    return result;
-  }
 }
