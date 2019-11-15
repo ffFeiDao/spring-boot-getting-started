@@ -19,5 +19,27 @@ public class Cloud {
     }
     return String.format("Hello %s!", name);
   }
-
+  @EngineFunction("createTodo")
+  public static void createTodo(@EngineFunctionParam("content") String content)
+      throws AVException {
+    AVObject todo = new AVObject("Todo");
+    todo.put("content", content);
+    todo.save();   
+  }
+  
+  @EngineFunction("averageStars")
+  public static float getAverageStars(@EngineFunctionParam("movie") String movie)
+      throws AVException {
+    AVQuery<AVObject> query = new AVQuery("Review");
+    query.whereEqualTo("movie", movie);
+    List<AVObject> reviews = query.find();
+    int sum = 0;
+    if (reviews == null && reviews.isEmpty()) {
+      return 0;
+    }
+    for (AVObject review : reviews) {
+      sum += review.getInt("star");
+    }
+    return sum / reviews.size();
+  }
 }
